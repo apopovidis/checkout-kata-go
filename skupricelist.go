@@ -19,7 +19,8 @@ func (s *SkuPriceList) GetItems() []SkuPrice {
 }
 
 func (s *SkuPriceList) AddItem(name string, price int) error {
-	if strings.TrimSpace(name) == "" {
+	var n = strings.TrimSpace(name)
+	if n == "" {
 		return errors.New("name cannot be empty")
 	}
 
@@ -27,12 +28,14 @@ func (s *SkuPriceList) AddItem(name string, price int) error {
 		return errors.New("price must be greater than zero")
 	}
 
-	var sku = s.GetSku(name)
-	if sku == nil {
-		s.items = append(s.items, NewSkuPrice(name, price))
+	var sku = s.GetSku(n)
+	if sku != nil {
+		return fmt.Errorf("sku with name %s already exists", n)
 	}
 
-	return fmt.Errorf("sku with name %s already exists", name)
+	s.items = append(s.items, NewSkuPrice(n, price))
+
+	return nil
 }
 
 func (s *SkuPriceList) GetSku(name string) *SkuPrice {
