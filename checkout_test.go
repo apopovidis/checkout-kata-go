@@ -111,6 +111,7 @@ func TestScanValidations(t *testing.T) {
 		"valid sku name and negative count":      newScanScenario("A", -1, true),
 		"valid sku name and count equal to zero": newScanScenario("A", 0, true),
 		"valid sku name and valid count":         newScanScenario("A", 1, false),
+		"sku name with spaces and valid count":   newScanScenario(" A ", 1, false),
 	}
 
 	for sCase, s := range scenarios {

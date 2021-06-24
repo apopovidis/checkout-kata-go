@@ -39,7 +39,8 @@ func NewCheckout(
 
 // Scan is a method that allows to scan items with a given name and count
 func (s *checkout) Scan(name string, count int) (err error) {
-	if strings.TrimSpace(name) == "" {
+	var n = strings.TrimSpace(name)
+	if n == "" {
 		return errors.New("name cannot be empty")
 	}
 
@@ -47,11 +48,11 @@ func (s *checkout) Scan(name string, count int) (err error) {
 		return errors.New("count must be greater than 0")
 	}
 
-	if _, ok := s.scannedSkusMap[name]; !ok {
-		return errors.Errorf("sku with name %s does not exist", name)
+	if _, ok := s.scannedSkusMap[n]; !ok {
+		return errors.Errorf("sku with name %s does not exist", n)
 	}
 
-	s.scannedSkusMap[name] += count
+	s.scannedSkusMap[n] += count
 
 	return
 }
