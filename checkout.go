@@ -25,9 +25,15 @@ func NewCheckout(
 	skuPriceList SkuPriceList,
 	skuSpecialPriceList SkuSpecialPriceList,
 ) ICheckout {
+	// init the map in the constructor function as the struct has not been created yet
+	var scannedSkusMap = make(map[string]int)
+	for _, item := range skuPriceList.GetItems() {
+		scannedSkusMap[item.GetName()] = 0
+	}
 	return &checkout{
-		skuPriceList:        skuPriceList,
-		skuSpecialPriceList: skuSpecialPriceList,
+		skuPriceList,
+		skuSpecialPriceList,
+		scannedSkusMap,
 	}
 }
 
@@ -40,8 +46,6 @@ func (s *checkout) Scan(name string, count int) (err error) {
 	if count <= 0 {
 		return errors.New("count must be greater than 0")
 	}
-
-	s.initScannedSkusMap(false)
 
 	if _, ok := s.scannedSkusMap[name]; !ok {
 		return errors.Errorf("sku with name %s does not exist", name)
@@ -58,16 +62,12 @@ func (s *checkout) GetTotalPrice() int {
 		res += s.getTotalPriceForItem(item)
 	}
 
-	s.initScannedSkusMap(true)
+	s.initScannedSkusMap()
 
 	return res
 }
 
-func (s *checkout) initScannedSkusMap(forceInit bool) {
-	if (!forceInit) && len(s.scannedSkusMap) > 0 {
-		return
-	}
-
+func (s *checkout) initScannedSkusMap() {
 	s.scannedSkusMap = make(map[string]int)
 	for _, item := range s.skuPriceList.GetItems() {
 		s.scannedSkusMap[item.GetName()] = 0
@@ -114,7 +114,7 @@ func (s *checkout) getTotalPriceForItem(name string) int {
 
 		// the largest offer is satisfied so return
 		if reminder == 0 {
-			total = (remainingCount / skuOffersCounts[i]) * nextOfferPrice
+			total += (remainingCount / skuOffersCounts[i]) * nextOfferPrice
 			remainingCount = 0
 			break
 		}
