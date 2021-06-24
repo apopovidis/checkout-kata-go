@@ -132,7 +132,7 @@ func TestScanValidations(t *testing.T) {
 	}
 }
 
-func TestGetTotalPrice(t *testing.T) {
+func TestGetTotalPriceWhenNoSkuIsScannedYet(t *testing.T) {
 	var checkout = NewCheckout(GetSkuPriceList(SkuPriceMap), GetSkuSpecialPriceList(SkuSpecialPriceMap))
 	assert.Equal(t, 0, checkout.GetTotalPrice())
 }
