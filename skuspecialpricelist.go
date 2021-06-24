@@ -15,7 +15,8 @@ func NewSkuSpecialPriceList() SkuSpecialPriceList {
 }
 
 func (s *SkuSpecialPriceList) AddItem(name string, numberOfUnits int, totalPrice int) error {
-	if strings.TrimSpace(name) == "" {
+	var n = strings.TrimSpace(name)
+	if n == "" {
 		return errors.New("name cannot be empty")
 	}
 
@@ -27,18 +28,25 @@ func (s *SkuSpecialPriceList) AddItem(name string, numberOfUnits int, totalPrice
 		return errors.New("totalPrice must be greater than zero")
 	}
 
-	var sku = s.GetSkus(name, numberOfUnits)
-	if sku == nil {
-		s.items = append(s.items, NewSkuSpecialPrice(name, numberOfUnits, totalPrice))
+	var sku = s.GetSkus(n, numberOfUnits, totalPrice)
+	if sku != nil {
+		return fmt.Errorf("sku with name %s, numberOfUnits %d and total price %d already exists", n, numberOfUnits, totalPrice)
 	}
 
-	return fmt.Errorf("sku with name %s and numberOfUnits %d already exists", name, numberOfUnits)
+	s.items = append(s.items, NewSkuSpecialPrice(n, numberOfUnits, totalPrice))
+
+	return nil
 }
 
-func (s *SkuSpecialPriceList) GetSkus(name string, numberOfUnits ...int) (skus []SkuSpecialPrice) {
+// if args are present then the first index should hold the number of units, and the second the total price
+func (s *SkuSpecialPriceList) GetSkus(name string, args ...int) (skus []SkuSpecialPrice) {
 	for _, i := range s.items {
-		if numberOfUnits != nil && numberOfUnits[0] > 0 {
-			if i.GetName() == name && i.GetNumberOfUnits() == numberOfUnits[0] {
+		if len(args) == 1 {
+			if i.GetName() == name && i.GetNumberOfUnits() == args[0] {
+				skus = append(skus, i)
+			}
+		} else if len(args) == 2 {
+			if i.GetName() == name && i.GetNumberOfUnits() == args[0] && i.GetTotalPrice() == args[1] {
 				skus = append(skus, i)
 			}
 		} else {
