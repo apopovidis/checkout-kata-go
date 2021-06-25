@@ -83,7 +83,7 @@ func (s *checkout) getTotalPriceForItem(name string) int {
 
 	var skuPriceForName = s.skuPriceList.GetSku(name).GetPrice()
 
-	// if there is no offer for the name just do a total and return it	var skuPriceListForName = s.skuSpecialPriceList.GetSkus(name)
+	// if there is no offer for the name just do a total and return it
 	var skuPriceListForName = s.skuSpecialPriceList.GetSkus(name)
 	if len(skuPriceListForName) == 0 {
 		return count * skuPriceForName
