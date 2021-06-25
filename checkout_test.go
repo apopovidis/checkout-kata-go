@@ -50,8 +50,8 @@ var TestScenarios = map[string]int{
 	"BB":   45,
 	"BAB":  95,
 	"DDAA": 130,
+	"AAA":  130,
 	// the differences
-	"AAA":        130,
 	"AAAA":       180,
 	"AAAAA":      230,
 	"AAAAAA":     260,
@@ -71,8 +71,8 @@ var TestScenariosExtraOffer = map[string]int{
 	"BB":   45,
 	"BAB":  95,
 	"DDAA": 130,
+	"AAA":  130,
 	// the differences
-	"AAA":        130,
 	"AAAA":       140,
 	"AAAAA":      190,
 	"AAAAAA":     240,
